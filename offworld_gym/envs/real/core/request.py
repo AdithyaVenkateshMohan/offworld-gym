@@ -45,6 +45,7 @@ class Request:
         web_token: String with the server's web token.
     """
     def __init__(self, web_token):
+        print("the web_token" , web_token)
         self.web_token = web_token
 
     def to_json(self):

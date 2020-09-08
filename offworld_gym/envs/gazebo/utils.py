@@ -17,7 +17,12 @@ from offworld_gym import version
 __version__     = version.__version__
 
 import numpy as np
+import sys
+# this is done to avoid the path collision bet' opencv python 3.6 and ros opencv
+path_to_remove_cv2 ='/opt/ros/kinetic/lib/python2.7/dist-packages'
+sys.path.remove(path_to_remove_cv2)
 import cv2
+sys.path.append(path_to_remove_cv2)
 import rospy
 from std_srvs.srv import Empty as Empty_srv
 from cv_bridge import CvBridge, CvBridgeError

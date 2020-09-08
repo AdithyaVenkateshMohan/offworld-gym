@@ -25,7 +25,7 @@ from offworld_gym.envs.real.real_env import AlgorithmMode, LearningType
 
 # create the envronment and establish connection
 env = gym.make('OffWorldMonolithDiscreteReal-v0', experiment_name='Random agent demo',
-               resume_experiment=False, channel_type=Channels.RGBD,
+               resume_experiment=True, channel_type=Channels.RGBD,
                learning_type=LearningType.END_TO_END, algorithm_mode=AlgorithmMode.TRAIN)
 
 # initialize figure for drawing RGB and D inputs
@@ -36,8 +36,17 @@ plt.show();
 # send a command to the robot
 while True:
     done = False
+   
+    get_proper = False
     while not done:
-        state, reward, done, _ = env.step(env.action_space.sample())
+        while not get_proper:
+            sampled_action = int(input("give an action"))
+            if sampled_action in [0,1,2,3]:
+                get_proper = True
+            else:
+                print("invalid action select between 0 1 2 3")
+        get_proper = False
+        state, reward, done, _ = env.step(sampled_action)
 
         # display the state
         ax1.imshow(np.array(state[0, :, :, :3], dtype='int'));

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# !/usr/bin/env python
 
 # Copyright 2019 OffWorld Inc.
 # Doing business as Off-World AI, Inc. in California.
@@ -17,18 +17,33 @@ import logging
 
 import offworld_gym
 from offworld_gym.envs.common.channels import Channels
+import matplotlib
+matplotlib.use('tkAgg')
+import matplotlib.pyplot as plt
 
 logging.basicConfig(level=logging.DEBUG)
 
 # create the environment
-env = gym.make("OffWorldDockerMonolithDiscreteSim-v0", channel_type=Channels.RGB_ONLY)
+env = gym.make("OffWorldMonolithDiscreteSim-v0", channel_type=Channels.RGB_ONLY)
 env.seed(42)
 
-logging.info(f"action space: {env.action_space} observation_space: {env.observation_space}")
+# logging.info(f"action space: {env.action_space} observation_space: {env.observation_space}")
 while True:
     env.reset()
     done = False
+    get_proper = False
     while not done:
-        sampled_action = env.action_space.sample()
+        while not get_proper:
+            sampled_action = int(input("give an action"))
+            if sampled_action in [0,1,2,3]:
+                get_proper = True
+            else:
+                print("invalid action select between 0 1 2 3")
+        get_proper = False 
         env.render()
         obs, rew, done, info = env.step(sampled_action)
+
+        print("the observation", obs , obs.shape , "the current reward", rew , "sample action", sampled_action)
+        plt.imshow(obs[0])
+        plt.show()
+        print("showing the plot")

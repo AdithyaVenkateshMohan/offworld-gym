@@ -52,6 +52,7 @@ class SecuredBridge(metaclass=Singleton):
         """
 
         token_var = self.settings_dict["user"]["api_token"]
+
         if not token_var in os.environ:
             raise ValueError("Please update OFFWORLD_GYM_ACCESS_TOKEN environment variable with api-token.")
 
@@ -59,10 +60,13 @@ class SecuredBridge(metaclass=Singleton):
             raise ValueError("Api-token is null or empty.")
 
         req = TokenRequest(os.environ[token_var])
+
         api_endpoint = "https://{}:{}/{}".format(self._server_ip, self._secured_port, TokenRequest.URI)
         response = None
         try:
+
             response = requests.post(url=api_endpoint, json=req.to_dict(), verify=self._certificate)
+
             response_json = json.loads(response.text)
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as err:
             raise GymException(f"A request error occurred:\n{err}")
@@ -74,6 +78,7 @@ class SecuredBridge(metaclass=Singleton):
             else:
                 raise GymException(f"A server error has occurred. Please contact the support team: gym.beta@offworld.ai.\n{err}")
         logger.debug("Web Token  : {}".format(response_json['web_token']))
+
         return response_json['web_token']
 
     def perform_handshake(self, experiment_name, resume_experiment, learning_type, algorithm_mode, environment_name):
@@ -103,8 +108,11 @@ class SecuredBridge(metaclass=Singleton):
 
         set_up_response = None
         try:
+            # print("url-end",api_endpoint)
             set_up_response = requests.post(url=api_endpoint, json=req.to_dict(), verify=self._certificate)
+            # print("setup_response",set_up_response)
             set_up_response_json = json.loads(set_up_response.text)
+            # print("setup_response",set_up_response_json)
         except (requests.exceptions.Timeout, requests.exceptions.ConnectionError) as err:
             raise GymException(f"A request error occurred:\n{err}")
         except Exception as err:
@@ -136,12 +144,16 @@ class SecuredBridge(metaclass=Singleton):
         self._action_counter += 1
         logger.debug("Start executing action {}, count : {}.".format(action_type.name, str(self._action_counter)))
         
+        
+        # print("web_token",web_token)
         req = MonolithDiscreteActionRequest(self._web_token, action_type=action_type, channel_type=channel_type, algorithm_mode=algorithm_mode)
         api_endpoint = "https://{}:{}/{}".format(self._server_ip, self._secured_port, MonolithDiscreteActionRequest.URI)
 
         response = None
         try:
+            # print("url-end",api_endpoint)
             response = requests.post(url=api_endpoint, json=req.to_dict(), verify=self._certificate)
+            # print("the response ---", response)
             response_json = json.loads(response.text)
             reward = int(response_json['reward'])
             state = json.loads(response_json['state'])

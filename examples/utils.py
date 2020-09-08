@@ -28,7 +28,11 @@ from keras import backend as K
 backend = K.backend()
 
 from kerasrl.callbacks import Callback
-
+import sys
+path_to_remove_cv2 ='/opt/ros/kinetic/lib/python2.7/dist-packages'
+sys.path.remove(path_to_remove_cv2)
+import cv2
+sys.path.append(path_to_remove_cv2)
 def GetLogPath(path=None, developerTestingFlag=True):
     """Setup a path where log files will be stored
 
@@ -293,3 +297,8 @@ class TB_RL(TB_convs):
     def on_episode_end(self, epoch, logs=None):
         # have to call on epoch end because that's what TB_convs has instead of episodes
         super(TB_RL, self).on_epoch_end(epoch, logs=logs)
+
+
+def convert_image2gray(img):
+    img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+    return img_gray
