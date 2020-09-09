@@ -302,3 +302,17 @@ class TB_RL(TB_convs):
 def convert_image2gray(img):
     img_gray = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
     return img_gray
+
+def resizing_uptoscale(img , scale_down = 30):
+    scale_percent = 100-scale_down # percent of original size
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    # resize image
+    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA) 
+    return resized
+def givingscaledownDim(original_dim , scale_down = 30):
+    scale_percent = 100-scale_down # percent of original size
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    return (width,height)
